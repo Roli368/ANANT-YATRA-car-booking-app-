@@ -1,33 +1,22 @@
-
-import { useState } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Polyline,
-  useMap,
-} from "react-leaflet";
+import { useState, useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Polyline, useMap } from "react-leaflet";
 import L from "leaflet";
+import { 
+  User, Phone, Calendar, ChevronRight, Fuel as FuelIcon, 
+  Navigation, Zap, ZapOff, Repeat, ArrowRight, ShieldCheck, MessageSquare, Receipt 
+} from "lucide-react";
 import LocationInput from "./LocationInput";
 
-/* ================= BUSINESS CONFIG ================= */
-const DRIVER_CHARGE_PER_DAY = 1000;
-const KM_PER_DAY = 300;
-
-const MILEAGE = {
-  NON_AC: 10,
-  AC: 8,
-};
-
-const DEFAULT_FUEL_PRICE = 100;
+/* ================= CONFIG ================= */
+const DRIVER_CHARGE_PER_DAY = 1200;
+const KM_PER_DAY = 400;
+const MILEAGE = { NON_AC: 10, AC: 8 };
+const DEFAULT_FUEL_PRICE = 95;
 const ADMIN_KEY = "ertiga123";
-
 const INDIA_CENTER = [22.9734, 78.6569];
 
-const getFuelPrice = () =>
-  Number(localStorage.getItem("fuelPrice")) || DEFAULT_FUEL_PRICE;
+const getFuelPrice = () => Number(localStorage.getItem("fuelPrice")) || DEFAULT_FUEL_PRICE;
 
-/* ================= MAP ICON ================= */
 const icon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
@@ -35,292 +24,212 @@ const icon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
-/* ================= FIT MAP ================= */
 function FitBounds({ markers }) {
   const map = useMap();
-  if (markers?.length === 2) {
-    map.fitBounds(markers, { padding: [60, 60] });
-  }
+  useEffect(() => {
+    if (markers?.length === 2 && markers[0] && markers[1]) {
+      map.fitBounds(markers, { padding: [40, 40] });
+    }
+  }, [markers, map]);
   return null;
 }
 
 export default function Booking() {
-  const isAdmin =
-    new URLSearchParams(window.location.search).get("admin") === ADMIN_KEY;
-
-  const [fuelPrice, setFuelPrice] = useState(getFuelPrice());
+  const isAdmin = new URLSearchParams(window.location.search).get("admin") === ADMIN_KEY;
+  const [fuelPrice, setFuelPrice] = useState(DEFAULT_FUEL_PRICE);
   const [loading, setLoading] = useState(false);
+  const [locating, setLocating] = useState(false);
   const [agreed, setAgreed] = useState(false);
-
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    date: "",
-    tripType: "ONE_WAY",
-    carType: "NON_AC",
+  const [form, setForm] = useState({ 
+    name: "", 
+    phone: "", 
+    date: "", 
+    tripType: "ONE_WAY", 
+    carType: "NON_AC" 
   });
-
+  
   const [fromPlace, setFromPlace] = useState(null);
   const [toPlace, setToPlace] = useState(null);
-
   const [calc, setCalc] = useState(null);
   const [route, setRoute] = useState(null);
   const [markers, setMarkers] = useState(null);
 
-  /* ================= ROUTE ================= */
-  const getRoute = async (from, to) => {
-    const res = await fetch(
-      `https://router.project-osrm.org/route/v1/driving/${from.lon},${from.lat};${to.lon},${to.lat}?overview=full&geometries=geojson`
-    );
-    const data = await res.json();
+  useEffect(() => { setFuelPrice(getFuelPrice()); }, []);
+  useEffect(() => { detectLocation(); }, []);
 
-    return {
-      km: data.routes[0].distance / 1000,
-      path: data.routes[0].geometry.coordinates.map(
-        ([lon, lat]) => [lat, lon]
-      ),
-      points: [
-        [from.lat, from.lon],
-        [to.lat, to.lon],
-      ],
-    };
+  const detectLocation = () => {
+    if (!navigator.geolocation) return;
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          const data = await res.json();
+          setFromPlace({ lat: latitude, lon: longitude, display_name: data.display_name });
+        } catch (err) {
+          console.error("GPS Reverse failed", err);
+        } finally { setLocating(false); }
+      },
+      () => setLocating(false),
+      { enableHighAccuracy: true }
+    );
   };
 
-  /* ================= CALCULATE ================= */
   const calculateFare = async () => {
-    if (!fromPlace || !toPlace) {
-      alert("Please select both pickup and drop locations");
-      return;
+    // CRITICAL: Checks for actual coordinate objects to prevent "Please select location" fault
+    if (!fromPlace?.lat || !toPlace?.lat) { 
+      alert("Please select both locations from the search results list to get coordinates."); 
+      return; 
     }
-
     try {
       setLoading(true);
-
-      const res = await getRoute(fromPlace, toPlace);
-      let km = res.km;
-
-      if (form.tripType === "ROUND_TRIP") km *= 2;
+      const res = await fetch(`https://router.project-osrm.org/route/v1/driving/${fromPlace.lon},${fromPlace.lat};${toPlace.lon},${toPlace.lat}?overview=full&geometries=geojson`);
+      const data = await res.json();
+      
+      let km = data.routes[0].distance / 1000;
+      if (form.tripType === "ROUND_TRIP") km *= 2; 
 
       const fuelCost = (km / MILEAGE[form.carType]) * fuelPrice;
       const days = Math.ceil(km / KM_PER_DAY);
       const driverCost = days * DRIVER_CHARGE_PER_DAY;
 
-      setCalc({
-        distance: km.toFixed(1),
-        fuel: Math.round(fuelCost),
-        driver: driverCost,
-        total: Math.round(fuelCost + driverCost),
+      setCalc({ 
+        distance: km.toFixed(1), 
+        fuel: Math.round(fuelCost), 
+        driver: driverCost, 
+        total: Math.round(fuelCost + driverCost) 
       });
 
-      setRoute(res.path);
-      setMarkers(res.points);
+      setRoute(data.routes[0].geometry.coordinates.map(([lon, lat]) => [lat, lon]));
+      setMarkers([[fromPlace.lat, fromPlace.lon], [toPlace.lat, toPlace.lon]]);
       setAgreed(false);
-    } catch {
-      alert("Unable to calculate route");
-    } finally {
-      setLoading(false);
-    }
+    } catch { alert("Route calculation failed."); } finally { setLoading(false); }
   };
 
-  /* ================= SUBMIT ================= */
   const submit = () => {
     if (!calc || !agreed) return;
-
-    const msg = `
-🚗 ANANT YATRA – Ertiga Booking
-👤 ${form.name}
-📞 ${form.phone}
-📅 ${form.date}
-📍 ${fromPlace.display_name} → ${toPlace.display_name}
-🚘 ${form.carType}
-🔁 ${form.tripType}
-📏 ${calc.distance} km
-💰 Total Fare: ₹${calc.total}
-
-⚠️ Important Notes:
-• Toll charges extra
-• Parking charges extra
-• Night charges applicable after 10:00 PM
-`;
-
-    window.open(
-      `https://wa.me/919193693736?text=${encodeURIComponent(msg)}`,
-      "_blank"
-    );
+    const msg = `🚗 ANANT YATRA Booking\n👤 ${form.name}\n📞 ${form.phone}\n📅 ${form.date}\n📍 ${fromPlace.display_name} → ${toPlace.display_name}\n🚘 ${form.carType} (${form.tripType})\n📏 ${calc.distance} km\n💰 Total: ₹${calc.total}`;
+    window.open(`https://wa.me/919193693736?text=${encodeURIComponent(msg)}`, "_blank");
   };
 
   return (
-    <section className="py-15 bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto px-6">
-
-        <h2 className="text-3xl font-bold text-center mb-12">
-          🚗 Book Your Ertiga
-        </h2>
-
-        {/* ADMIN */}
-        {isAdmin && (
-          <div className="mb-6 p-4 bg-yellow-50 border rounded-xl w-fit">
-            <p className="font-semibold">🔐 Admin – Fuel Price</p>
-            <input
-              type="number"
-              value={fuelPrice}
-              onChange={(e) => {
-                setFuelPrice(e.target.value);
-                localStorage.setItem("fuelPrice", e.target.value);
-              }}
-              className="border p-2 rounded mt-2 w-28"
-            />
-            <p className="text-xs text-gray-600 mt-1">
-              Non-AC: 10 km/l • AC: 8 km/l
-            </p>
+    <section className="py-6 bg-slate-50/50" id="book">
+      <div className="max-w-6xl mx-auto px-4">
+        
+        {/* COMPACT HEADER */}
+        <div className="mb-6 flex items-center justify-between border-b pb-3 border-slate-200">
+          <div>
+            <h2 className="text-xl font-black text-slate-900 leading-none">Instant Booking</h2>
+            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Safar Jo Kabhi Khatam Na Ho</p>
           </div>
-        )}
+          {isAdmin && (
+            <div className="flex items-center gap-2 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-100">
+              <FuelIcon size={14} className="text-amber-600"/>
+              <input type="number" value={fuelPrice} onChange={(e) => { setFuelPrice(e.target.value); localStorage.setItem("fuelPrice", e.target.value); }} className="w-12 bg-transparent text-xs font-bold outline-none" />
+            </div>
+          )}
+        </div>
 
-        <div className="grid lg:grid-cols-2 gap-10">
-
-          {/* FORM */}
-          <div className="bg-white rounded-3xl shadow-xl p-8 space-y-4">
-            <input
-              placeholder="Your Name"
-              className="w-full border p-3 rounded-xl"
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-            />
-
-            <input
-              placeholder="Phone Number"
-              className="w-full border p-3 rounded-xl"
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
-            />
-
-            <input
-              type="date"
-              className="w-full border p-3 rounded-xl"
-              onChange={(e) => setForm({ ...form, date: e.target.value })}
-            />
-
-            <LocationInput
-              label="📍 Pickup Location"
-              placeholder="Type city or area"
-              onSelect={(p) =>
-                setFromPlace({
-                  lat: p.lat,
-                  lon: p.lon,
-                  display_name: p.display_name,
-                })
-              }
-            />
-
-            <LocationInput
-              label="🏁 Drop Location"
-              placeholder="Type destination"
-              onSelect={(p) =>
-                setToPlace({
-                  lat: p.lat,
-                  lon: p.lon,
-                  display_name: p.display_name,
-                })
-              }
-            />
-
-            <div className="flex gap-3">
-              <select
-                className="w-1/2 border p-3 rounded-xl"
-                onChange={(e) =>
-                  setForm({ ...form, tripType: e.target.value })
-                }
-              >
-                <option value="ONE_WAY">One Way</option>
-                <option value="ROUND_TRIP">Round Trip</option>
-              </select>
-
-              <select
-                className="w-1/2 border p-3 rounded-xl"
-                onChange={(e) =>
-                  setForm({ ...form, carType: e.target.value })
-                }
-              >
-                <option value="NON_AC">Non-AC</option>
-                <option value="AC">AC</option>
-              </select>
+        <div className="grid lg:grid-cols-5 gap-6 items-start">
+          {/* 🔹 INPUT FORM Area */}
+          <div className="lg:col-span-2 space-y-5 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm relative z-20">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex gap-2 bg-slate-50 p-4.5 rounded-xl border border-slate-100">
+                <User size={14} className="text-slate-400 mt-1" />
+                <input placeholder="Name" className="bg-transparent border-none focus:ring-0 w-full font-bold text-xs text-slate-700 outline-none" onChange={(e)=>setForm({...form, name: e.target.value})}/>
+              </div>
+              <div className="flex gap-2 bg-slate-50 p-4.5 rounded-xl border border-slate-100">
+                <Phone size={14} className="text-slate-400 mt-1" />
+                <input placeholder="Phone" className="bg-transparent border-none focus:ring-0 w-full font-bold text-xs text-slate-700 outline-none" onChange={(e)=>setForm({...form, phone: e.target.value})}/>
+              </div>
             </div>
 
-            <button
-              onClick={calculateFare}
-              disabled={loading}
-              className="w-full bg-indigo-600 text-white py-3 rounded-xl text-lg
-                         hover:bg-indigo-700 transition disabled:opacity-50"
-            >
-              {loading ? "Calculating…" : "Calculate Fare"}
+            <div className="flex gap-2 bg-slate-50 p-4.5 rounded-xl border border-slate-100">
+              <Calendar size={14} className="text-slate-400 mt-1" />
+              <input type="date" className="bg-transparent border-none focus:ring-0 w-full font-bold text-xs text-slate-700 outline-none" onChange={(e)=>setForm({...form, date: e.target.value})}/>
+            </div>
+
+            {/* SELECTION TABS */}
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex bg-slate-100 p-2 rounded-xl">
+                <button onClick={() => setForm({...form, tripType: "ONE_WAY"})} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.tripType === "ONE_WAY" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>ONE WAY</button>
+                <button onClick={() => setForm({...form, tripType: "ROUND_TRIP"})} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.tripType === "ROUND_TRIP" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>ROUND</button>
+              </div>
+              <div className="flex bg-slate-100 p-2 rounded-xl">
+                <button onClick={() => setForm({...form, carType: "NON_AC"})} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.carType === "NON_AC" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>NON-AC</button>
+                <button onClick={() => setForm({...form, carType: "AC"})} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.carType === "AC" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>AC</button>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl border border-slate-100 relative overflow-visible">
+              <LocationInput label="Pickup" onSelect={(p) => setFromPlace(p)} value={fromPlace?.display_name || ""} placeholder={locating ? "GPS..." : "Pickup Location"} />
+              <button onClick={detectLocation} className="absolute right-3 top-7 text-indigo-600 bg-white p-1.5 rounded-lg shadow-sm z-10">
+                <Navigation size={12} className={locating ? "animate-spin" : ""} />
+              </button>
+              <div className="h-[1px] bg-slate-200 mx-4"></div>
+              <LocationInput label="Drop" onSelect={(p) => setToPlace(p)} value={toPlace?.display_name || ""} placeholder="Drop Destination" />
+            </div>
+
+            <button onClick={calculateFare} disabled={loading} className="w-full bg-indigo-600 text-white py-3 rounded-xl font-black text-xs shadow-lg shadow-indigo-100 flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all active:scale-95">
+              {loading ? "Calculating..." : "Calculate Fare"} <ChevronRight size={14} />
             </button>
           </div>
 
-          
-
-          {/* MAP + RESULT */}
-          <div className="space-y-6">
-
-            
-            <MapContainer
-              center={INDIA_CENTER}
-              zoom={5}
-              className="h-72 rounded-3xl shadow-lg"
-            >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              {markers && (
-                <>
-                  <Marker position={markers[0]} icon={icon} />
-                  <Marker position={markers[1]} icon={icon} />
-                  <FitBounds markers={markers} />
-                </>
-              )}
-              {route && <Polyline positions={route} />}
-            </MapContainer>
+          {/* 🔹 MAP & SUMMARY Area */}
+          <div className="lg:col-span-3 space-y-5">
+            <div className="h-64 rounded-2xl overflow-hidden shadow-lg border border-slate-200 relative z-0">
+              <MapContainer center={INDIA_CENTER} zoom={5} className="h-full w-full">
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                {markers && (
+                  <>
+                    <Marker position={markers[0]} icon={icon} />
+                    <Marker position={markers[1]} icon={icon} />
+                    <FitBounds markers={markers} />
+                  </>
+                )}
+                {route && <Polyline positions={route} color="#4f46e5" weight={3} opacity={0.7} />}
+              </MapContainer>
+            </div>
 
             {calc && (
-              <div className="bg-blue-50 border border-blue-200 rounded-3xl p-6">
-                <p>📏 Distance: {calc.distance} km</p>
-                <p>⛽ Fuel: ₹{calc.fuel}</p>
-                <p>👨‍✈️ Driver: ₹{calc.driver}</p>
-                <p className="text-xl font-bold mt-2">
-                  💰 Total: ₹{calc.total}
-                </p>
-
-                {/* TERMS */}
-                <div className="mt-4 bg-white border rounded-2xl p-4 text-sm">
-                  <p className="font-semibold mb-2">ℹ️ Important Notes</p>
-                  <ul className="space-y-1">
-                    <li>✔ Toll charges extra</li>
-                    <li>✔ Parking charges extra</li>
-                    <li>✔ Night charges after 10:00 PM</li>
-                  </ul>
+              <div className="bg-slate-900 text-white rounded-2xl p-5 shadow-xl border border-white/5">
+                <div className="flex justify-between items-center mb-3 pb-2 border-b border-white/10">
+                  <span className="text-[10px] font-black text-indigo-300 flex items-center gap-2 uppercase"><Receipt size={14}/> Summary</span>
+                  <span className="text-[10px] font-bold text-indigo-100 bg-white/5 px-2 py-0.5 rounded-md tracking-tighter">{calc.distance} km trip</span>
                 </div>
 
-                {/* AGREEMENT */}
-                <div className="flex items-start gap-2 text-sm mt-4">
-                  <input
-                    type="checkbox"
-                    checked={agreed}
-                    onChange={(e) => setAgreed(e.target.checked)}
-                    className="mt-1"
-                  />
-                  <p>
-                    I agree that toll, parking and night charges
-                    (after 10:00 PM) are extra as per actual.
-                  </p>
+                <div className="grid grid-cols-3 gap-2 mb-3">
+                  <div className="p-2 bg-white/5 rounded-xl border border-white/5 text-center">
+                    <p className="text-[8px] text-indigo-300 font-black uppercase">Fuel</p>
+                    <p className="text-xs font-black">₹{calc.fuel}</p>
+                  </div>
+                  <div className="p-2 bg-white/5 rounded-xl border border-white/5 text-center">
+                    <p className="text-[8px] text-indigo-300 font-black uppercase">Driver</p>
+                    <p className="text-xs font-black">₹{calc.driver}</p>
+                  </div>
+                  <div className="p-2 bg-indigo-600 rounded-xl text-center">
+                    <p className="text-[8px] text-indigo-100 font-black uppercase">Total</p>
+                    <p className="text-sm font-black text-yellow-400">₹{calc.total}</p>
+                  </div>
                 </div>
 
-                <button
-                  onClick={submit}
-                  disabled={!agreed}
-                  className={`mt-4 w-full py-3 rounded-xl text-white transition
-                    ${
-                      agreed
-                        ? "bg-green-500 hover:bg-green-600"
-                        : "bg-gray-300 cursor-not-allowed"
-                    }`}
-                >
-                  Send on WhatsApp
-                </button>
+                <div className="space-y-3">
+                  <div className="flex gap-3 text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">
+                    <span className="flex items-center gap-1"><ShieldCheck size={10} className="text-emerald-500" /> Toll Extra</span>
+                    <span className="flex items-center gap-1"><ShieldCheck size={10} className="text-emerald-500" /> Parking Extra</span>
+                    <span className="flex items-center gap-1"><ShieldCheck size={10} className="text-emerald-500" /> Night Charges apply</span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <input type="checkbox" id="agree" checked={agreed} onChange={(e)=>setAgreed(e.target.checked)} className="h-3 w-3 rounded bg-white/10 text-indigo-500" />
+                    <label htmlFor="agree" className="text-[9px] text-indigo-200 font-bold uppercase tracking-tighter cursor-pointer">Agree to extra charges</label>
+                  </div>
+
+                  <button onClick={submit} disabled={!agreed} className={`w-full py-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${agreed ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`}>
+                    <MessageSquare size={14} className="inline mr-1" /> Confirm via WhatsApp
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -329,11 +238,3 @@ export default function Booking() {
     </section>
   );
 }
-
-
-
-
-
-
-
-

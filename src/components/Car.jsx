@@ -1,7 +1,7 @@
 import FadeIn from "./FadeIn";
 import AvailabilityBadge from "./AvailabilityBadge";
 import ertiga1 from "../assets/ertiga1.jpg";
-
+import { CheckCircle, XCircle, Users, Wind, ShieldCheck, User } from "lucide-react";
 
 export default function Car() {
   const goToBooking = () => {
@@ -10,82 +10,97 @@ export default function Car() {
     });
   };
 
+  const features = [
+    { text: "Spacious & Comfortable", icon: <Users size={18} /> },
+    { text: "Fully Air-Conditioned", icon: <Wind size={18} /> },
+    { text: "Clean & Sanitized", icon: <ShieldCheck size={18} /> },
+    { text: "Professional Driver", icon: <User size={18} /> },
+  ];
+
   return (
     <FadeIn>
-      <section id="car" className="py-10 bg-white">
+      <section id="car" className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-6">
-
+          
           {/* Heading */}
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-4">
-            Our Car
-          </h3>
-          <p className="text-center text-gray-600 mb-14">
-            Well-maintained, comfortable Ertiga for all types of bookings
-          </p>
+          <div className="text-center mb-16">
+            <h3 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+              Our Premium Fleet
+            </h3>
+            <div className="w-24 h-1.5 bg-indigo-600 mx-auto rounded-full mb-6"></div>
+            <p className="max-w-2xl mx-auto text-lg text-slate-600">
+              Travel in style and comfort with our top-tier Maruti Suzuki Ertiga, 
+              perfectly maintained for your safety and satisfaction.
+            </p>
+          </div>
 
           {/* Card */}
-          <div
-            className="max-w-4xl mx-auto bg-gray-50 rounded-3xl p-8 md:p-10
-                       shadow-md hover:shadow-2xl hover:-translate-y-1
-                       transition-all duration-300"
-          >
-            <div className="grid md:grid-cols-2 gap-10 items-center">
-
+          <div className="max-w-5xl mx-auto bg-white rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-200/60 border border-slate-100 transition-transform duration-500 hover:scale-[1.01]">
+            <div className="grid lg:grid-cols-12 gap-0">
+              
               {/* LEFT: IMAGE */}
-              <div className="relative">
+              <div className="lg:col-span-5 relative h-80 lg:h-auto overflow-hidden">
                 <img
-                   src={ertiga1} 
+                  src={ertiga1} 
                   alt="Maruti Suzuki Ertiga"
-                  className="rounded-2xl shadow-lg w-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                 />
-                <span className="absolute top-3 left-3 bg-blue-600 text-white text-sm px-3 py-1 rounded-full">
-                  7 Seater
-                </span>
+                <div className="absolute top-6 left-6 flex flex-col gap-2">
+                  <span className="bg-white/90 backdrop-blur-md text-slate-900 text-xs font-bold px-4 py-1.5 rounded-full shadow-sm flex items-center gap-2">
+                    <Users size={14} className="text-indigo-600" /> 7 Seater
+                  </span>
+                  <span className="bg-indigo-600 text-white text-[10px] uppercase tracking-widest font-black px-4 py-1.5 rounded-full shadow-lg">
+                    Top Rated
+                  </span>
+                </div>
               </div>
 
               {/* RIGHT: DETAILS */}
-              <div>
-                <h4 className="text-2xl font-semibold mb-6">
-                  Maruti Suzuki Ertiga
-                </h4>
-                <AvailabilityBadge status="available" />
+              <div className="lg:col-span-7 p-8 md:p-12 flex flex-col">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h4 className="text-3xl font-black text-slate-900 mb-2">
+                      Maruti Suzuki Ertiga
+                    </h4>
+                    <AvailabilityBadge status="available" />
+                  </div>
+                </div>
 
-
-                {/* Features */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                  {[
-                    "Spacious & Comfortable",
-                    "Fully Air-Conditioned",
-                    "Clean & Sanitized Interior",
-                    "Professional Driver",
-                  ].map((item, i) => (
+                {/* Features Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                  {features.map((feature, i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-3 bg-white px-4 py-2 rounded-lg shadow-sm"
+                      className="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-3 rounded-2xl"
                     >
-                      <span className="text-green-600 text-lg">✔</span>
-                      <span>{item}</span>
+                      <span className="text-indigo-600">{feature.icon}</span>
+                      <span className="text-sm font-semibold text-slate-700">{feature.text}</span>
                     </div>
                   ))}
                 </div>
 
-                {/* Decoration Info */}
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
-                  <p className="text-red-600 font-semibold">
-                    ❌ Decoration Not Provided
-                  </p>
-                  <p className="text-sm text-red-500 mt-1">
-                    Clients can arrange decoration separately if required
-                  </p>
+                {/* Decoration Warning Card */}
+                <div className="bg-rose-50 border border-rose-100 rounded-2xl p-5 mb-8 flex gap-4 items-start">
+                  <XCircle className="text-rose-500 shrink-0 mt-0.5" size={20} />
+                  <div>
+                    <p className="text-rose-700 font-bold text-sm">
+                      Decoration Policy
+                    </p>
+                    <p className="text-xs text-rose-600/80 leading-relaxed mt-1">
+                      Floral or themed decoration is not provided by us. 
+                      However, clients are welcome to arrange third-party 
+                      decorators at their own expense.
+                    </p>
+                  </div>
                 </div>
 
-                {/* CTA */}
+                {/* Action Button */}
                 <button
                   onClick={goToBooking}
-                  className="bg-green-500 text-white px-6 py-3 rounded-lg text-lg
-                             hover:bg-green-600 hover:scale-[1.03] transition"
+                  className="group relative w-full lg:w-max bg-indigo-600 text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300 transition-all active:scale-95 flex items-center justify-center gap-3"
                 >
-                  Book This Car
+                  Book This Journey
+                  <CheckCircle size={20} className="group-hover:rotate-12 transition-transform" />
                 </button>
               </div>
 
@@ -97,4 +112,3 @@ export default function Car() {
     </FadeIn>
   );
 }
-

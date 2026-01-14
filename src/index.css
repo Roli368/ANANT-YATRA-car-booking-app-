@@ -1,100 +1,73 @@
-/* Tailwind v4 import */
 @import "tailwindcss";
 
-/* Smooth scroll for navbar links */
+/* 1. GLOBAL LAYOUT & SCROLLING */
 html {
   scroll-behavior: smooth;
+  /* Fixes the "Navbar covering content" fault */
+  scroll-padding-top: 120px; 
 }
 
-/* Optional small UI polish */
 body {
-  @apply bg-white text-gray-800;
-}
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  background-color: #f8fafc; /* slate-50 */
+  color: #0f172a; /* slate-900 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.animate-fade-in {
-  animation: fade-in 0.4s ease-out;
-}
-
-@media (max-width: 768px) {
-  body {
-    padding-bottom: 64px;
-  }
-}
-
-
-
-/* Fix leaflet z-index so it stays under navbar */
+/* 2. LEAFLET MAP REFINEMENT */
+/* Fixes z-index hierarchy so map elements don't overlap Navbar or Tooltips */
 .leaflet-container {
-  z-index: 10 !important;
+  z-index: 1 !important; 
+  border-radius: 2rem;
 }
 
 .leaflet-pane,
 .leaflet-top,
 .leaflet-bottom {
-  z-index: 10 !important;
+  z-index: 2 !important;
 }
-@keyframes bounceSoft {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
+
+/* 3. MOBILE ADAPTATION */
+@media (max-width: 768px) {
+  body {
+    /* Extra space at bottom so MobileCTA doesn't hide content */
+    padding-bottom: 100px;
   }
 }
 
-@keyframes bounceSofter {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
+/* 4. ANIMATION SYSTEM */
+@keyframes bounceSoft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 .animate-bounce-slow {
-  animation: bounceSoft 2s infinite;
-}
-
-.animate-bounce-slower {
-  animation: bounceSofter 3s infinite;
-}
-@keyframes fadeDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  animation: bounceSoft 3s ease-in-out infinite;
 }
 
 @keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeDown {
-  animation: fadeDown 0.6s ease-out;
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-slideDown {
-  animation: slideDown 0.3s ease-out;
+  animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* 5. CUSTOM UI COMPONENTS & FIXES */
+
+/* Fixed Focus States - Removed the @apply !important conflict */
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid rgba(79, 70, 229, 0.2); /* indigo-500/20 */
+  border-color: rgba(79, 70, 229, 0.5);
+  outline-offset: 0;
+}
+
+/* Tactile feedback for better Mobile UI */
+button, a {
+  transition: all 0.2s;
+}
+
+button:active, a:active {
+  transform: scale(0.96);
+}

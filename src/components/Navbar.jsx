@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Phone, MessageCircle, Menu, X, ChevronRight } from "lucide-react";
 
 const links = [
   { id: "services", label: "Services" },
@@ -9,9 +10,14 @@ const links = [
 export default function Navbar() {
   const [active, setActive] = useState("services");
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
+      // Background effect logic
+      setScrolled(window.scrollY > 20);
+
+      // Active section tracking logic
       links.forEach((l) => {
         const el = document.getElementById(l.id);
         if (!el) return;
@@ -26,121 +32,124 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-white shadow-md border-b">
-
-      {/* 🔹 TOP BAR */}
-      <div className="border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-1 flex justify-between items-center">
-
-          {/* LOGO */}
-          <div className="flex items-center h-15 gap-3">
-            <img
-              src="/logo.png"
-              alt="Anant Yatra"
-              className="h-16 w-auto object-contain"
-            />
-            <div className="hidden sm:block leading-tight">
-              <p className="text-lg font-extrabold tracking-wide text-blue-700">
-                ANANT YATRA
+    <header 
+      className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${
+        scrolled 
+          ? "bg-white/80 backdrop-blur-md shadow-lg border-b border-slate-200 py-1" 
+          : "bg-white py-3"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex justify-between items-center">
+          
+          {/* 🔹 LOGO SECTION */}
+          <div className="flex items-center gap-4 group cursor-pointer">
+            <div className="relative">
+              <img
+                src="/logo.png"
+                alt="Anant Yatra"
+                className="h-12 w-auto object-contain transition-transform group-hover:scale-105"
+              />
+              <div className="absolute -inset-1 bg-indigo-500/10 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+            <div className="hidden sm:block">
+              <p className="text-xl font-black tracking-tighter text-slate-900">
+                ANANT <span className="text-indigo-600">YATRA</span>
               </p>
-              <p className="text-[11px] uppercase tracking-widest text-gray-500">
+              <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400">
                 Safar Jo Kabhi Khatam Na Ho
               </p>
             </div>
           </div>
 
-          {/* CONTACT */}
-          <div className="hidden sm:flex items-center gap-6 text-13px">
-            <a
-              href="tel:+919193693736"
-              className="text-gray-700 hover:text-blue-700 transition font-medium"
-            >
-              📞 +91 91936 93736
-            </a>
+          {/* 🔹 DESKTOP NAV */}
+          <nav className="hidden md:flex items-center gap-2">
+            <ul className="flex items-center gap-1 bg-slate-100/50 p-1 rounded-full border border-slate-200/50 mr-4">
+              {links.map((l) => (
+                <li key={l.id}>
+                  <a
+                    href={`#${l.id}`}
+                    className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
+                      active === l.id
+                        ? "bg-white text-indigo-600 shadow-sm"
+                        : "text-slate-500 hover:text-slate-900"
+                    }`}
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
 
-            <a
-              href="https://wa.me/919193693736"
-              className="bg-green-500 text-white px-5 py-2 rounded-full text-15px font-semibold
-                         hover:bg-green-600 shadow transition"
-            >
-              WhatsApp
-            </a>
-          </div>
+            <div className="flex items-center gap-3">
+              <a
+                href="tel:+919193693736"
+                className="p-2.5 rounded-full bg-slate-100 text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                title="Call Us"
+              >
+                <Phone size={18} />
+              </a>
+              <a
+                href="https://wa.me/919193693736"
+                className="flex items-center gap-2 bg-emerald-500 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-emerald-600 shadow-lg shadow-emerald-200 transition-all active:scale-95"
+              >
+                <MessageCircle size={18} />
+                WhatsApp
+              </a>
+            </div>
+          </nav>
 
-          {/* MOBILE TOGGLE */}
+          {/* 🔹 MOBILE TOGGLE */}
           <button
             onClick={() => setOpen(!open)}
-            className="sm:hidden text-3xl text-gray-700"
+            className="md:hidden p-2 rounded-xl bg-slate-100 text-slate-900"
           >
-            ☰
+            {open ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
-      {/* 🔹 MENU BAR */}
-      <div className="bg-gray-50 hidden sm:block">
-        <div className="max-w-7xl mx-auto px-6">
-          <ul className="flex gap-10 text-sm font-semibold">
-            {links.map((l) => (
-              <li key={l.id} className="relative py-3">
-                <a
-                  href={`#${l.id}`}
-                  className={`transition ${
-                    active === l.id
-                      ? "text-blue-700"
-                      : "text-gray-700 hover:text-blue-600"
-                  }`}
-                >
-                  {l.label}
-                </a>
-
-                {active === l.id && (
-                  <span className="absolute left-0 -bottom-0.5 w-full h-0.75 bg-blue-600 rounded-full"></span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
       {/* 🔹 MOBILE MENU */}
-      {open && (
-        <div className="sm:hidden bg-white border-t shadow-lg">
+      <div 
+        className={`md:hidden absolute top-full left-0 w-full bg-white border-t border-slate-100 shadow-2xl transition-all duration-300 origin-top ${
+          open ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="p-6 space-y-4">
           {links.map((l) => (
             <a
               key={l.id}
               href={`#${l.id}`}
               onClick={() => setOpen(false)}
-              className={`block px-6 py-4 border-b transition ${
+              className={`flex items-center justify-between p-4 rounded-2xl transition-all ${
                 active === l.id
-                  ? "bg-blue-50 text-blue-700 font-semibold"
-                  : "text-gray-700 hover:bg-gray-50"
+                  ? "bg-indigo-50 text-indigo-600 font-bold"
+                  : "bg-slate-50 text-slate-600 hover:bg-slate-100"
               }`}
             >
               {l.label}
+              <ChevronRight size={18} className={active === l.id ? "opacity-100" : "opacity-0"} />
             </a>
           ))}
 
-          <div className="p-4 flex gap-3">
+          <div className="grid grid-cols-2 gap-4 pt-4">
             <a
               href="tel:+919193693736"
-              className="flex-1 text-center border rounded-lg py-2 font-medium"
+              className="flex items-center justify-center gap-2 py-4 rounded-2xl bg-slate-900 text-white font-bold text-sm"
             >
-              Call
+              <Phone size={18} /> Call Now
             </a>
             <a
               href="https://wa.me/919193693736"
-              className="flex-1 text-center bg-green-500 text-white rounded-lg py-2 font-semibold"
+              className="flex items-center justify-center gap-2 py-4 rounded-2xl bg-emerald-500 text-white font-bold text-sm"
             >
-              WhatsApp
+              <MessageCircle size={18} /> WhatsApp
             </a>
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }
-
-
 
 
