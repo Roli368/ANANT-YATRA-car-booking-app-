@@ -160,9 +160,9 @@ export default function TaxiFare() {
                     <p className="text-2xl font-black text-emerald-600">₹15<span className="text-xs font-medium text-emerald-400">/km</span></p>
                   </div>
                 </div>
-                <button className="flex items-center gap-2 text-sm font-bold text-gray-400 group-hover:text-emerald-600 transition-all">
-                  Inquire Now <ChevronRight size={16} />
-                </button>
+                <a href="tel:+919193693736" className="flex items-center gap-2 text-sm font-bold text-gray-400 group-hover:text-emerald-600 transition-all">
+                  <Phone size={16} /> +91 9193693736
+                </a>
               </div>
 
               {/* Hill Area Row */}
