@@ -171,6 +171,13 @@ export default function Booking() {
               </div>
             </div>
 
+            <div className="grid grid-cols-1 gap-2 mb-2">
+              <div className="flex bg-slate-100 p-2 rounded-xl">
+                <button onClick={() => setForm({ ...form, tripType: "ONE_WAY" })} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.tripType === "ONE_WAY" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>ONE WAY</button>
+                <button onClick={() => setForm({ ...form, tripType: "ROUND_TRIP" })} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.tripType === "ROUND_TRIP" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>ROUND TRIP</button>
+              </div>
+            </div>
+
             <div className="bg-slate-50 rounded-2xl border border-slate-100 relative overflow-visible">
               <LocationInput label="Pickup" onSelect={(p) => setFromPlace(p)} value={fromPlace?.display_name || ""} placeholder={locating ? "GPS..." : "Pickup Location"} />
               <button onClick={detectLocation} className="absolute right-3 top-7 text-indigo-600 bg-white p-1.5 rounded-lg shadow-sm z-10">
