@@ -32,32 +32,28 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header 
-      className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${
-        scrolled 
-          ? "bg-white/80 backdrop-blur-md shadow-lg border-b border-slate-200 py-1" 
+    <header
+      className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${scrolled
+          ? "bg-white/80 backdrop-blur-md shadow-lg border-b border-slate-200 py-1"
           : "bg-white py-3"
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex justify-between items-center">
-          
+
           {/* 🔹 LOGO SECTION */}
           <div className="flex items-center gap-4 group cursor-pointer">
             <div className="relative">
               <img
                 src="/logo.png"
-                alt="Anant Yatra"
+                alt="Yuvi Yatraa"
                 className="h-12 w-auto object-contain transition-transform group-hover:scale-105"
               />
               <div className="absolute -inset-1 bg-indigo-500/10 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
             <div className="hidden sm:block">
               <p className="text-xl font-black tracking-tighter text-slate-900">
-                ANANT <span className="text-indigo-600">YATRA</span>
-              </p>
-              <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400">
-                Safar Jo Kabhi Khatam Na Ho
+                YUVI <span className="text-indigo-600">YATRAA</span>
               </p>
             </div>
           </div>
@@ -69,11 +65,10 @@ export default function Navbar() {
                 <li key={l.id}>
                   <a
                     href={`#${l.id}`}
-                    className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
-                      active === l.id
+                    className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${active === l.id
                         ? "bg-white text-indigo-600 shadow-sm"
                         : "text-slate-500 hover:text-slate-900"
-                    }`}
+                      }`}
                   >
                     {l.label}
                   </a>
@@ -110,10 +105,9 @@ export default function Navbar() {
       </div>
 
       {/* 🔹 MOBILE MENU */}
-      <div 
-        className={`md:hidden absolute top-full left-0 w-full bg-white border-t border-slate-100 shadow-2xl transition-all duration-300 origin-top ${
-          open ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0 pointer-events-none"
-        }`}
+      <div
+        className={`md:hidden absolute top-full left-0 w-full bg-white border-t border-slate-100 shadow-2xl transition-all duration-300 origin-top ${open ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0 pointer-events-none"
+          }`}
       >
         <div className="p-6 space-y-4">
           {links.map((l) => (
@@ -121,11 +115,10 @@ export default function Navbar() {
               key={l.id}
               href={`#${l.id}`}
               onClick={() => setOpen(false)}
-              className={`flex items-center justify-between p-4 rounded-2xl transition-all ${
-                active === l.id
+              className={`flex items-center justify-between p-4 rounded-2xl transition-all ${active === l.id
                   ? "bg-indigo-50 text-indigo-600 font-bold"
                   : "bg-slate-50 text-slate-600 hover:bg-slate-100"
-              }`}
+                }`}
             >
               {l.label}
               <ChevronRight size={18} className={active === l.id ? "opacity-100" : "opacity-0"} />

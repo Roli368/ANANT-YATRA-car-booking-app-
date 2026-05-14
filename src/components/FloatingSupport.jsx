@@ -1,8 +1,8 @@
 import { MessageCircle, Send, Phone } from "lucide-react";
 
 export default function FloatingSupport() {
-  const chatMsg = "Hi Anant Yatra 👋 I need help regarding booking.";
-  const whatsappMsg = "Hi Anant Yatra 🚗 I want to book a car.";
+  const chatMsg = "Hi Yuvi Yatraa 👋 I need help regarding booking.";
+  const whatsappMsg = "Hi Yuvi Yatraa 🚗 I want to book a car.";
 
   const Button = ({ href, icon: Icon, label, colorClass, animation }) => (
     <a

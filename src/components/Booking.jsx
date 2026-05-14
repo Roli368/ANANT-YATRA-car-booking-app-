@@ -1,16 +1,24 @@
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Polyline, useMap } from "react-leaflet";
 import L from "leaflet";
-import { 
-  User, Phone, Calendar, ChevronRight, Fuel as FuelIcon, 
-  Navigation, Zap, ZapOff, Repeat, ArrowRight, ShieldCheck, MessageSquare, Receipt 
+import {
+  User, Phone, Calendar, ChevronRight, Fuel as FuelIcon,
+  Navigation, Zap, ZapOff, Repeat, ArrowRight, ShieldCheck, MessageSquare, Receipt
 } from "lucide-react";
 import LocationInput from "./LocationInput";
 
 /* ================= CONFIG ================= */
-const DRIVER_CHARGE_PER_DAY = 1200;
+const CAR_CONFIG = {
+  ERTIGA: {
+    DRIVER_CHARGE_PER_DAY: 1200,
+    MILEAGE: { NON_AC: 10, AC: 8 },
+  },
+  DZIRE: {
+    DRIVER_CHARGE_PER_DAY: 800,
+    MILEAGE: { NON_AC: 12, AC: 10 },
+  }
+};
 const KM_PER_DAY = 400;
-const MILEAGE = { NON_AC: 10, AC: 8 };
 const DEFAULT_FUEL_PRICE = 95;
 const ADMIN_KEY = "ertiga123";
 const INDIA_CENTER = [22.9734, 78.6569];
@@ -40,14 +48,15 @@ export default function Booking() {
   const [loading, setLoading] = useState(false);
   const [locating, setLocating] = useState(false);
   const [agreed, setAgreed] = useState(false);
-  const [form, setForm] = useState({ 
-    name: "", 
-    phone: "", 
-    date: "", 
-    tripType: "ONE_WAY", 
-    carType: "NON_AC" 
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    date: "",
+    tripType: "ROUND_TRIP",
+    carType: "NON_AC",
+    carModel: "ERTIGA"
   });
-  
+
   const [fromPlace, setFromPlace] = useState(null);
   const [toPlace, setToPlace] = useState(null);
   const [calc, setCalc] = useState(null);
@@ -78,27 +87,28 @@ export default function Booking() {
 
   const calculateFare = async () => {
     // CRITICAL: Checks for actual coordinate objects to prevent "Please select location" fault
-    if (!fromPlace?.lat || !toPlace?.lat) { 
-      alert("Please select both locations from the search results list to get coordinates."); 
-      return; 
+    if (!fromPlace?.lat || !toPlace?.lat) {
+      alert("Please select both locations from the search results list to get coordinates.");
+      return;
     }
     try {
       setLoading(true);
       const res = await fetch(`https://router.project-osrm.org/route/v1/driving/${fromPlace.lon},${fromPlace.lat};${toPlace.lon},${toPlace.lat}?overview=full&geometries=geojson`);
       const data = await res.json();
-      
+
       let km = data.routes[0].distance / 1000;
-      if (form.tripType === "ROUND_TRIP") km *= 2; 
+      if (form.tripType === "ROUND_TRIP") km *= 2;
 
-      const fuelCost = (km / MILEAGE[form.carType]) * fuelPrice;
+      const config = CAR_CONFIG[form.carModel];
+      const fuelCost = (km / config.MILEAGE[form.carType]) * fuelPrice;
       const days = Math.ceil(km / KM_PER_DAY);
-      const driverCost = days * DRIVER_CHARGE_PER_DAY;
+      const driverCost = days * config.DRIVER_CHARGE_PER_DAY;
 
-      setCalc({ 
-        distance: km.toFixed(1), 
-        fuel: Math.round(fuelCost), 
-        driver: driverCost, 
-        total: Math.round(fuelCost + driverCost) 
+      setCalc({
+        distance: km.toFixed(1),
+        fuel: Math.round(fuelCost),
+        driver: driverCost,
+        total: Math.round(fuelCost + driverCost)
       });
 
       setRoute(data.routes[0].geometry.coordinates.map(([lon, lat]) => [lat, lon]));
@@ -109,23 +119,22 @@ export default function Booking() {
 
   const submit = () => {
     if (!calc || !agreed) return;
-    const msg = `🚗 ANANT YATRA Booking\n👤 ${form.name}\n📞 ${form.phone}\n📅 ${form.date}\n📍 ${fromPlace.display_name} → ${toPlace.display_name}\n🚘 ${form.carType} (${form.tripType})\n📏 ${calc.distance} km\n💰 Total: ₹${calc.total}`;
+    const msg = `🚗 YUVI YATRAA Booking\n👤 ${form.name}\n📞 ${form.phone}\n📅 ${form.date}\n📍 ${fromPlace.display_name} → ${toPlace.display_name}\n🚘 ${form.carType} (${form.tripType})\n📏 ${calc.distance} km\n💰 Total: ₹${calc.total}`;
     window.open(`https://wa.me/919193693736?text=${encodeURIComponent(msg)}`, "_blank");
   };
 
   return (
     <section className="py-6 bg-slate-50/50" id="book">
       <div className="max-w-6xl mx-auto px-4">
-        
+
         {/* COMPACT HEADER */}
         <div className="mb-6 flex items-center justify-between border-b pb-3 border-slate-200">
           <div>
             <h2 className="text-xl font-black text-slate-900 leading-none">Instant Booking</h2>
-            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Safar Jo Kabhi Khatam Na Ho</p>
           </div>
           {isAdmin && (
             <div className="flex items-center gap-2 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-100">
-              <FuelIcon size={14} className="text-amber-600"/>
+              <FuelIcon size={14} className="text-amber-600" />
               <input type="number" value={fuelPrice} onChange={(e) => { setFuelPrice(e.target.value); localStorage.setItem("fuelPrice", e.target.value); }} className="w-12 bg-transparent text-xs font-bold outline-none" />
             </div>
           )}
@@ -137,28 +146,28 @@ export default function Booking() {
             <div className="grid grid-cols-2 gap-2">
               <div className="flex gap-2 bg-slate-50 p-4.5 rounded-xl border border-slate-100">
                 <User size={14} className="text-slate-400 mt-1" />
-                <input placeholder="Name" className="bg-transparent border-none focus:ring-0 w-full font-bold text-xs text-slate-700 outline-none" onChange={(e)=>setForm({...form, name: e.target.value})}/>
+                <input placeholder="Name" className="bg-transparent border-none focus:ring-0 w-full font-bold text-xs text-slate-700 outline-none" onChange={(e) => setForm({ ...form, name: e.target.value })} />
               </div>
               <div className="flex gap-2 bg-slate-50 p-4.5 rounded-xl border border-slate-100">
                 <Phone size={14} className="text-slate-400 mt-1" />
-                <input placeholder="Phone" className="bg-transparent border-none focus:ring-0 w-full font-bold text-xs text-slate-700 outline-none" onChange={(e)=>setForm({...form, phone: e.target.value})}/>
+                <input placeholder="Phone" className="bg-transparent border-none focus:ring-0 w-full font-bold text-xs text-slate-700 outline-none" onChange={(e) => setForm({ ...form, phone: e.target.value })} />
               </div>
             </div>
 
             <div className="flex gap-2 bg-slate-50 p-4.5 rounded-xl border border-slate-100">
               <Calendar size={14} className="text-slate-400 mt-1" />
-              <input type="date" className="bg-transparent border-none focus:ring-0 w-full font-bold text-xs text-slate-700 outline-none" onChange={(e)=>setForm({...form, date: e.target.value})}/>
+              <input type="date" className="bg-transparent border-none focus:ring-0 w-full font-bold text-xs text-slate-700 outline-none" onChange={(e) => setForm({ ...form, date: e.target.value })} />
             </div>
 
             {/* SELECTION TABS */}
             <div className="grid grid-cols-2 gap-2">
               <div className="flex bg-slate-100 p-2 rounded-xl">
-                <button onClick={() => setForm({...form, tripType: "ONE_WAY"})} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.tripType === "ONE_WAY" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>ONE WAY</button>
-                <button onClick={() => setForm({...form, tripType: "ROUND_TRIP"})} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.tripType === "ROUND_TRIP" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>ROUND</button>
+                <button onClick={() => setForm({...form, carModel: "ERTIGA"})} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.carModel === "ERTIGA" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>ERTIGA</button>
+                <button onClick={() => setForm({...form, carModel: "DZIRE"})} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.carModel === "DZIRE" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>DZIRE</button>
               </div>
               <div className="flex bg-slate-100 p-2 rounded-xl">
-                <button onClick={() => setForm({...form, carType: "NON_AC"})} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.carType === "NON_AC" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>NON-AC</button>
-                <button onClick={() => setForm({...form, carType: "AC"})} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.carType === "AC" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>AC</button>
+                <button onClick={() => setForm({ ...form, carType: "NON_AC" })} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.carType === "NON_AC" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>NON-AC</button>
+                <button onClick={() => setForm({ ...form, carType: "AC" })} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.carType === "AC" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>AC</button>
               </div>
             </div>
 
@@ -195,7 +204,7 @@ export default function Booking() {
             {calc && (
               <div className="bg-slate-900 text-white rounded-2xl p-5 shadow-xl border border-white/5">
                 <div className="flex justify-between items-center mb-3 pb-2 border-b border-white/10">
-                  <span className="text-[10px] font-black text-indigo-300 flex items-center gap-2 uppercase"><Receipt size={14}/> Summary</span>
+                  <span className="text-[10px] font-black text-indigo-300 flex items-center gap-2 uppercase"><Receipt size={14} /> Summary</span>
                   <span className="text-[10px] font-bold text-indigo-100 bg-white/5 px-2 py-0.5 rounded-md tracking-tighter">{calc.distance} km trip</span>
                 </div>
 
@@ -222,7 +231,7 @@ export default function Booking() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <input type="checkbox" id="agree" checked={agreed} onChange={(e)=>setAgreed(e.target.checked)} className="h-3 w-3 rounded bg-white/10 text-indigo-500" />
+                    <input type="checkbox" id="agree" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="h-3 w-3 rounded bg-white/10 text-indigo-500" />
                     <label htmlFor="agree" className="text-[9px] text-indigo-200 font-bold uppercase tracking-tighter cursor-pointer">Agree to extra charges</label>
                   </div>
 

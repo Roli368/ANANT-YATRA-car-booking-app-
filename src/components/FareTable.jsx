@@ -4,6 +4,21 @@ import { Car, Fuel, MapPin, Moon, ShieldCheck, Info, Phone, ChevronRight } from 
 export default function TaxiFare() {
   const [activeTab, setActiveTab] = useState("ROUND");
 
+  const dailyPackages = [
+    {
+      model: "SUV – Ertiga",
+      charge: "₹1200",
+      nonAcAvg: "10 km/L",
+      acAvg: "8 km/L"
+    },
+    {
+      model: "Sedan – Dzire",
+      charge: "₹800",
+      nonAcAvg: "12 km/L",
+      acAvg: "10 km/L"
+    }
+  ];
+
   // Reusable Inclusion Tag component
   const InclusionTag = ({ icon: Icon, text }) => (
     <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 px-2.5 py-1 rounded-full text-[11px] font-medium text-gray-600">
@@ -72,30 +87,32 @@ export default function TaxiFare() {
             </div>
 
             <div className="p-8">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-                <div className="space-y-1">
-                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Vehicle Model</p>
-                  <p className="text-xl font-black text-gray-800">SUV – Ertiga</p>
-                </div>
-                
-                <div className="space-y-1">
-                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Daily Charge</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-black text-indigo-600">₹1200</span>
-                    <span className="text-sm text-gray-400 font-medium">/day</span>
-                  </div>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {dailyPackages.map((pkg, i) => (
+                  <div key={i} className="border border-gray-100 rounded-2xl p-6 bg-gray-50/50 hover:bg-white hover:shadow-lg transition-all space-y-6">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Vehicle</p>
+                        <p className="text-lg font-black text-gray-800">{pkg.model}</p>
+                      </div>
+                      <div className="space-y-1 text-right">
+                        <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Daily Charge</p>
+                        <p className="text-2xl font-black text-indigo-600">{pkg.charge}<span className="text-xs text-gray-400 font-medium">/day</span></p>
+                      </div>
+                    </div>
 
-                <div className="bg-indigo-50/50 p-4 rounded-2xl space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500 font-semibold">Non-AC Avg:</span>
-                    <span className="text-sm font-bold text-indigo-700">10 km/L</span>
+                    <div className="bg-white border border-indigo-50 p-4 rounded-xl space-y-2 shadow-sm shadow-indigo-100/20">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-500 font-semibold">Non-AC Avg:</span>
+                        <span className="text-sm font-bold text-indigo-700">{pkg.nonAcAvg}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-500 font-semibold">AC Avg:</span>
+                        <span className="text-sm font-bold text-indigo-700">{pkg.acAvg}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500 font-semibold">AC Avg:</span>
-                    <span className="text-sm font-bold text-indigo-700">8 km/L</span>
-                  </div>
-                </div>
+                ))}
               </div>
 
               {/* Inclusions Row */}

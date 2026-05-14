@@ -24,14 +24,14 @@ export default function AboutUs() {
           <div className="space-y-8">
             <div>
               <h3 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">
-                About <span className="text-indigo-600">Anant Yatra</span>
+                About <span className="text-indigo-600">Yuvi Yatraa</span>
               </h3>
               <div className="w-20 h-1.5 bg-indigo-600 rounded-full mb-8"></div>
             </div>
 
             <div className="space-y-6 text-lg text-slate-600 leading-relaxed">
               <p>
-                <span className="font-bold text-slate-900">Anant Yatra</span> is a trusted car booking service 
+                <span className="font-bold text-slate-900">Yuvi Yatraa</span> is a trusted car booking service 
                 dedicated to providing seamless, safe, and reliable journeys across India. 
                 Whether it's a family wedding, an urgent airport transfer, or a long-distance 
                 vacation, we ensure you travel in total comfort.
