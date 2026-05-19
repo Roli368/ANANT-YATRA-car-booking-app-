@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://yuviyatratravels.in/sitemap.xml
+Sitemap: https://yuviyatratravels.com/sitemap.xml
