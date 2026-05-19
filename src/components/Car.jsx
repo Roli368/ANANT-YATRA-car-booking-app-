@@ -53,7 +53,7 @@ export default function Car() {
                 price: "₹800",
               }
             ].map((car, index) => (
-              <div key={index} className="max-w-5xl mx-auto bg-white rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-200/60 border border-slate-100 transition-transform duration-500 hover:scale-[1.01]">
+              <div key={index} className="max-w-5xl mx-auto bg-white rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-200/60 border border-slate-100 transition-transform duration-500 hover:scale-[1.02]">
                 <div className="grid lg:grid-cols-12 gap-0">
                   
                   {/* LEFT: IMAGE */}
@@ -91,7 +91,7 @@ export default function Car() {
                       {features.map((feature, i) => (
                         <div
                           key={i}
-                          className="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-3 rounded-2xl"
+                          className="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-3 rounded-2xl hover:-translate-y-1 hover:shadow-md transition-all duration-300 cursor-default"
                         >
                           <span className="text-indigo-600">{feature.icon}</span>
                           <span className="text-sm font-semibold text-slate-700">{feature.text}</span>
@@ -100,8 +100,8 @@ export default function Car() {
                     </div>
 
                     {/* Note Card */}
-                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 mb-8 flex gap-4 items-start">
-                      <Info className="text-blue-500 shrink-0 mt-0.5" size={20} />
+                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 mb-8 flex gap-4 items-start hover:bg-blue-100/50 hover:shadow-md transition-all duration-300">
+                      <Info className="text-blue-500 shrink-0 mt-0.5 group-hover:animate-pulse" size={20} />
                       <div>
                         <p className="text-blue-700 font-bold text-sm">
                           Note
@@ -117,7 +117,7 @@ export default function Car() {
                     {/* Action Button */}
                     <button
                       onClick={goToBooking}
-                      className="group relative w-full lg:w-max bg-indigo-600 text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300 transition-all active:scale-95 flex items-center justify-center gap-3"
+                      className="group relative w-full lg:w-max bg-indigo-600 text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-3"
                     >
                       Book This Journey
                       <CheckCircle size={20} className="group-hover:rotate-12 transition-transform" />

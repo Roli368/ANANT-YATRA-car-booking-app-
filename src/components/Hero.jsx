@@ -50,7 +50,7 @@ export default function Hero() {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          
+
           {/* LEFT CONTENT */}
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-2 mb-6">
@@ -68,7 +68,7 @@ export default function Hero() {
             </h2>
 
             <p className="text-xl text-slate-300 mb-10 max-w-lg mx-auto lg:mx-0 leading-relaxed">
-              Experience comfort and reliability. Specialized in weddings, 
+              Experience comfort and reliability. Specialized in weddings,
               local trips, and outstation travels with expert drivers.
             </p>
 
@@ -95,7 +95,7 @@ export default function Hero() {
           <div className="relative group">
             {/* Visual Frame Decor */}
             <div className="absolute -inset-4 bg-gradient-to-tr from-indigo-500/30 to-blue-500/30 rounded-[2.5rem] blur-2xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
-            
+
             <div className="relative aspect-[4/3] w-full max-w-xl mx-auto overflow-hidden rounded-[2rem] border-4 border-white/10 shadow-2xl">
               <img
                 src={images[index]}
@@ -122,8 +122,8 @@ export default function Hero() {
               {/* Image Indicators */}
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
                 {images.map((_, i) => (
-                  <div 
-                    key={i} 
+                  <div
+                    key={i}
                     className={`h-1.5 rounded-full transition-all ${i === index ? 'w-8 bg-white' : 'w-2 bg-white/40'}`}
                   ></div>
                 ))}

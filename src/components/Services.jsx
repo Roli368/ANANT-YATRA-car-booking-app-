@@ -34,7 +34,7 @@ export default function Services() {
   return (
     <section id="services" className="py-24 bg-slate-50/50">
       <div className="max-w-7xl mx-auto px-6">
-        
+
         {/* Heading Section */}
         <FadeIn direction="down" distance={20}>
           <div className="text-center mb-20">
@@ -43,7 +43,7 @@ export default function Services() {
             </h3>
             <div className="w-20 h-1.5 bg-indigo-600 mx-auto rounded-full mb-6"></div>
             <p className="max-w-2xl mx-auto text-lg text-slate-600 font-medium">
-              Premium Ertiga car booking tailored for every specific occasion 
+              Premium Ertiga car booking tailored for every specific occasion
               with professional drivers.
             </p>
           </div>

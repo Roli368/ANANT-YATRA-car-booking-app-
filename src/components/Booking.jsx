@@ -162,8 +162,8 @@ export default function Booking() {
             {/* SELECTION TABS */}
             <div className="grid grid-cols-2 gap-2">
               <div className="flex bg-slate-100 p-2 rounded-xl">
-                <button onClick={() => setForm({...form, carModel: "ERTIGA"})} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.carModel === "ERTIGA" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>ERTIGA</button>
-                <button onClick={() => setForm({...form, carModel: "DZIRE"})} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.carModel === "DZIRE" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>DZIRE</button>
+                <button onClick={() => setForm({ ...form, carModel: "ERTIGA" })} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.carModel === "ERTIGA" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>ERTIGA</button>
+                <button onClick={() => setForm({ ...form, carModel: "DZIRE" })} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.carModel === "DZIRE" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>DZIRE</button>
               </div>
               <div className="flex bg-slate-100 p-2 rounded-xl">
                 <button onClick={() => setForm({ ...form, carType: "NON_AC" })} className={`flex-1 py-1.5 rounded-lg text-[10px] font-black ${form.carType === "NON_AC" ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}>NON-AC</button>

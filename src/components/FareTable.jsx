@@ -30,7 +30,7 @@ export default function TaxiFare() {
   return (
     <section className="py-12 bg-slate-50 min-h-screen font-sans">
       <div className="max-w-4xl mx-auto px-6">
-        
+
         {/* HEADER */}
         <div className="text-center mb-10">
           <span className="text-indigo-600 font-bold text-xs tracking-widest uppercase bg-indigo-50 px-3 py-1 rounded-full">
@@ -55,11 +55,10 @@ export default function TaxiFare() {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`px-8 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${
-                  activeTab === tab.key
+                className={`px-8 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${activeTab === tab.key
                     ? "bg-white text-indigo-600 shadow-md ring-1 ring-black/5"
                     : "text-gray-500 hover:text-gray-800"
-                }`}
+                  }`}
               >
                 {tab.label}
               </button>
@@ -68,7 +67,7 @@ export default function TaxiFare() {
         </div>
 
         <div className="grid gap-8">
-          
+
           {/* ================= DAILY PACKAGE CARD ================= */}
           <div className="bg-white rounded-3xl shadow-xl shadow-indigo-100/50 border border-indigo-50 overflow-hidden group hover:border-indigo-200 transition-all">
             <div className="bg-gradient-to-r from-indigo-600 to-blue-600 p-6 flex justify-between items-center text-white">
