@@ -9,6 +9,7 @@ export default function FloatingSupport() {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      aria-label={label}
       className={`flex items-center justify-end gap-3 group transition-all duration-300 hover:scale-105 active:scale-95`}
     >
       {/* Hover Label */}

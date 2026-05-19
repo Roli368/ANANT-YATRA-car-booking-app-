@@ -28,9 +28,9 @@ export default function Footer() {
             </p>
 
             <div className="flex gap-4">
-              <a href="https://www.facebook.com/share/1AU1S9r7wr/" className="p-2 bg-slate-900 rounded-full hover:text-white hover:bg-indigo-600 transition-all"><Facebook size={18} /></a>
-              <a href="https://www.instagram.com/yuviyatratravels?igsh=N2preXN0YW4xb3c4" className="p-2 bg-slate-900 rounded-full hover:text-white hover:bg-pink-600 transition-all"><Instagram size={18} /></a>
-              <a href="mailto:yuviyatratravels@gmail.com" className="p-2 bg-slate-900 rounded-full hover:text-white hover:bg-slate-700 transition-all"><Mail size={18} /></a>
+              <a href="https://www.facebook.com/share/1AU1S9r7wr/" aria-label="Visit our Facebook page" className="p-2 bg-slate-900 rounded-full hover:text-white hover:bg-indigo-600 transition-all"><Facebook size={18} /></a>
+              <a href="https://www.instagram.com/yuviyatratravels?igsh=N2preXN0YW4xb3c4" aria-label="Visit our Instagram page" className="p-2 bg-slate-900 rounded-full hover:text-white hover:bg-pink-600 transition-all"><Instagram size={18} /></a>
+              <a href="mailto:yuviyatratravels@gmail.com" aria-label="Email us" className="p-2 bg-slate-900 rounded-full hover:text-white hover:bg-slate-700 transition-all"><Mail size={18} /></a>
             </div>
           </div>
 

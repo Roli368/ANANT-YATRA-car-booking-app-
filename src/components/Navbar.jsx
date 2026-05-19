@@ -97,6 +97,7 @@ export default function Navbar() {
           {/* 🔹 MOBILE TOGGLE */}
           <button
             onClick={() => setOpen(!open)}
+            aria-label={open ? "Close menu" : "Open menu"}
             className="md:hidden p-2 rounded-xl bg-slate-100 text-slate-900"
           >
             {open ? <X size={24} /> : <Menu size={24} />}
