@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Polyline, useMap } from "react-leaflet";
-import L from "leaflet";
+import { useState, useEffect, useRef } from "react";
 import {
   User, Phone, Calendar, ChevronRight, Fuel as FuelIcon,
   Navigation, Zap, ZapOff, Repeat, ArrowRight, ShieldCheck, MessageSquare, Receipt
@@ -25,23 +23,6 @@ const INDIA_CENTER = [22.9734, 78.6569];
 
 const getFuelPrice = () => Number(localStorage.getItem("fuelPrice")) || DEFAULT_FUEL_PRICE;
 
-const icon = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-});
-
-function FitBounds({ markers }) {
-  const map = useMap();
-  useEffect(() => {
-    if (markers?.length === 2 && markers[0] && markers[1]) {
-      map.fitBounds(markers, { padding: [40, 40] });
-    }
-  }, [markers, map]);
-  return null;
-}
-
 export default function Booking() {
   const isAdmin = new URLSearchParams(window.location.search).get("admin") === ADMIN_KEY;
   const [fuelPrice, setFuelPrice] = useState(DEFAULT_FUEL_PRICE);
@@ -62,9 +43,71 @@ export default function Booking() {
   const [calc, setCalc] = useState(null);
   const [route, setRoute] = useState(null);
   const [markers, setMarkers] = useState(null);
+  
+  const mapRef = useRef(null);
+  const markersRef = useRef([]);
+  const routePolylineRef = useRef(null);
 
   useEffect(() => { setFuelPrice(getFuelPrice()); }, []);
   useEffect(() => { detectLocation(); }, []);
+
+  // Initialize Mappls Map
+  useEffect(() => {
+    const initMap = setInterval(() => {
+      if (window.mappls) {
+        clearInterval(initMap);
+        mapRef.current = new window.mappls.Map('mappls-map', {
+          center: INDIA_CENTER,
+          zoom: 5,
+        });
+      }
+    }, 500);
+    return () => clearInterval(initMap);
+  }, []);
+
+  // Update Map Route & Markers
+  useEffect(() => {
+    if (!mapRef.current) return;
+    
+    // Clear old markers
+    markersRef.current.forEach(m => m.remove());
+    markersRef.current = [];
+
+    // Clear old route
+    if (routePolylineRef.current) {
+      mapRef.current.removeLayer(routePolylineRef.current);
+    }
+
+    if (markers && markers.length === 2) {
+      // Add markers
+      const m1 = new window.mappls.Marker({
+        map: mapRef.current,
+        position: { lat: parseFloat(markers[0][0]), lng: parseFloat(markers[0][1]) }
+      });
+      const m2 = new window.mappls.Marker({
+        map: mapRef.current,
+        position: { lat: parseFloat(markers[1][0]), lng: parseFloat(markers[1][1]) }
+      });
+      markersRef.current = [m1, m2];
+      
+      // Fit bounds using [lng, lat] for Mapbox GL compatibility
+      mapRef.current.fitBounds([
+        [parseFloat(markers[0][1]), parseFloat(markers[0][0])],
+        [parseFloat(markers[1][1]), parseFloat(markers[1][0])]
+      ], { padding: 40 });
+    }
+
+    if (route) {
+      const path = route.map(p => ({ lat: parseFloat(p[0]), lng: parseFloat(p[1]) }));
+      routePolylineRef.current = new window.mappls.Polyline({
+        map: mapRef.current,
+        path: path,
+        strokeColor: "#4f46e5",
+        strokeWeight: 4,
+        strokeOpacity: 0.8
+      });
+    }
+  }, [markers, route]);
 
   const detectLocation = () => {
     if (!navigator.geolocation) return;
@@ -194,18 +237,8 @@ export default function Booking() {
 
           {/* 🔹 MAP & SUMMARY Area */}
           <div className="lg:col-span-3 space-y-5">
-            <div className="h-64 rounded-2xl overflow-hidden shadow-lg border border-slate-200 relative z-0">
-              <MapContainer center={INDIA_CENTER} zoom={5} className="h-full w-full">
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                {markers && (
-                  <>
-                    <Marker position={markers[0]} icon={icon} />
-                    <Marker position={markers[1]} icon={icon} />
-                    <FitBounds markers={markers} />
-                  </>
-                )}
-                {route && <Polyline positions={route} color="#4f46e5" weight={3} opacity={0.7} />}
-              </MapContainer>
+            <div className="h-64 rounded-2xl overflow-hidden shadow-lg border border-slate-200 relative z-0" id="mappls-map">
+              {/* Mappls Map will render here */}
             </div>
 
             {calc && (
