@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://anant-yatra-car-booking-app.vercel.app/sitemap.xml
+Sitemap: https://yuviyatratravels.in/sitemap.xml

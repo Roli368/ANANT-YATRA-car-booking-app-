@@ -119,7 +119,7 @@ export default function Booking() {
 
   const submit = () => {
     if (!calc || !agreed) return;
-    const msg = `🚗 YUVI YATRAA Booking\n👤 ${form.name}\n📞 ${form.phone}\n📅 ${form.date}\n📍 ${fromPlace.display_name} → ${toPlace.display_name}\n🚘 ${form.carType} (${form.tripType})\n📏 ${calc.distance} km\n💰 Total: ₹${calc.total}`;
+    const msg = `🚗 YUVI YATRA TRAVELS Booking\n👤 ${form.name}\n📞 ${form.phone}\n📅 ${form.date}\n📍 ${fromPlace.display_name} → ${toPlace.display_name}\n🚘 ${form.carType} (${form.tripType})\n📏 ${calc.distance} km\n💰 Total: ₹${calc.total}`;
     window.open(`https://wa.me/919193693736?text=${encodeURIComponent(msg)}`, "_blank");
   };
 

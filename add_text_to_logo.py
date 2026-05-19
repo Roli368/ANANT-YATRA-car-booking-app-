@@ -12,7 +12,7 @@ def replace_text_in_logo(img_path):
     draw.rectangle([0, crop_start, width, height], fill=(255, 255, 255, 255))
     
     # 2. Write the new text
-    text = "YUVI YATRAA"
+    text = "YUVI YATRA TRAVELS"
     
     # Load Segoe UI Bold, or Arial if not found
     font_path = "C:\\Windows\\Fonts\\segoeuib.ttf"

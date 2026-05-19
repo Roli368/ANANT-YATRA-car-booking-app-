@@ -24,22 +24,22 @@ export default function AboutUs() {
           <div className="space-y-8">
             <div>
               <h3 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">
-                About <span className="text-indigo-600">Yuvi Yatraa</span>
+                About <span className="text-indigo-600">Yuvi Yatra Travels</span>
               </h3>
               <div className="w-20 h-1.5 bg-indigo-600 rounded-full mb-8"></div>
             </div>
 
             <div className="space-y-6 text-lg text-slate-600 leading-relaxed">
               <p>
-                <span className="font-bold text-slate-900">Yuvi Yatraa</span> is a trusted car booking service 
-                dedicated to providing seamless, safe, and reliable journeys across India. 
-                Whether it's a family wedding, an urgent airport transfer, or a long-distance 
+                <span className="font-bold text-slate-900">Yuvi Yatra Travels</span> is a trusted car booking service
+                dedicated to providing seamless, safe, and reliable journeys across India.
+                Whether it's a family wedding, an urgent airport transfer, or a long-distance
                 vacation, we ensure you travel in total comfort.
               </p>
 
               <p>
-                With our flagship, well-maintained Ertiga and a team of seasoned professional drivers, 
-                our mission is to transform every trip into a stress-free memory. We believe 
+                With our flagship, well-maintained Ertiga and a team of seasoned professional drivers,
+                our mission is to transform every trip into a stress-free memory. We believe
                 transportation should be <span className="text-indigo-600 font-semibold">easy, transparent, and always on time.</span>
               </p>
             </div>
@@ -59,7 +59,7 @@ export default function AboutUs() {
           <div className="relative group">
             {/* Background Accent */}
             <div className="absolute -inset-4 bg-indigo-500/10 rounded-[3rem] blur-2xl group-hover:bg-indigo-500/20 transition-colors"></div>
-            
+
             <div className="relative bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/60 p-10 border border-slate-100">
               <div className="flex items-center gap-3 mb-8">
                 <div className="p-3 bg-indigo-50 rounded-2xl">

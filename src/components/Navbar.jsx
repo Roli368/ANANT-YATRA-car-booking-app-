@@ -46,14 +46,14 @@ export default function Navbar() {
             <div className="relative">
               <img
                 src="/logo.png"
-                alt="Yuvi Yatraa"
+                alt="Yuvi Yatra Travels"
                 className="h-12 w-auto object-contain transition-transform group-hover:scale-105"
               />
               <div className="absolute -inset-1 bg-indigo-500/10 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
             <div className="hidden sm:block">
               <p className="text-xl font-black tracking-tighter text-slate-900">
-                YUVI <span className="text-indigo-600">YATRAA</span>
+                YUVI <span className="text-indigo-600">YATRA TRAVELS</span>
               </p>
             </div>
           </div>

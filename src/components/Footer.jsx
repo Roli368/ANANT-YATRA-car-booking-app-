@@ -15,11 +15,11 @@ export default function Footer() {
           {/* BRAND SECTION */}
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="Yuvi Yatraa" className="h-12 w-auto brightness-110" />
+              <img src="/logo.png" alt="Yuvi Yatra Travels" className="h-12 w-auto brightness-110" />
             </div>
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-2xl font-bold text-white tracking-tight">Yuvi Yatraa</h3>
+                <h3 className="text-2xl font-bold text-white tracking-tight">Yuvi Yatra Travels</h3>
               </div>
             </div>
 
@@ -29,8 +29,8 @@ export default function Footer() {
 
             <div className="flex gap-4">
               <a href="https://www.facebook.com/share/1AU1S9r7wr/" className="p-2 bg-slate-900 rounded-full hover:text-white hover:bg-indigo-600 transition-all"><Facebook size={18} /></a>
-              <a href="https://www.instagram.com/anantyatratravels?igsh=N2preXN0YW4xb3c4" className="p-2 bg-slate-900 rounded-full hover:text-white hover:bg-pink-600 transition-all"><Instagram size={18} /></a>
-              <a href="mailto:anantyatratravels@gmail.com" className="p-2 bg-slate-900 rounded-full hover:text-white hover:bg-slate-700 transition-all"><Mail size={18} /></a>
+              <a href="https://www.instagram.com/yuviyatratravels?igsh=N2preXN0YW4xb3c4" className="p-2 bg-slate-900 rounded-full hover:text-white hover:bg-pink-600 transition-all"><Instagram size={18} /></a>
+              <a href="mailto:yuviyatratravels@gmail.com" className="p-2 bg-slate-900 rounded-full hover:text-white hover:bg-slate-700 transition-all"><Mail size={18} /></a>
             </div>
           </div>
 
@@ -111,7 +111,7 @@ export default function Footer() {
 
         {/* BOTTOM SECTION */}
         <div className="mt-16 pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-500">
-          <p>© {currentYear} Yuvi Yatraa. All rights reserved.</p>
+          <p>© {currentYear} Yuvi Yatra Travels. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-slate-300">Privacy Policy</a>
             <a href="#" className="hover:text-slate-300">Terms of Service</a>

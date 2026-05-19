@@ -60,7 +60,7 @@ export default function DriverProfile() {
       {/* Modern Instagram Link */}
       <div className="mt-8">
         <a
-          href="https://www.instagram.com/anantyatratravels?igsh=N2preXN0YW4xb3c4"
+          href="https://www.instagram.com/yuviyatratravels?igsh=N2preXN0YW4xb3c4"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-pink-50 to-rose-50 border border-pink-100 py-3 rounded-2xl text-pink-600 hover:from-pink-100 hover:to-rose-100 transition-all font-bold text-sm"
