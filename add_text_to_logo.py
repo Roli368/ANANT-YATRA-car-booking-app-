@@ -19,20 +19,29 @@ def replace_text_in_logo(img_path):
     if not os.path.exists(font_path):
         font_path = "C:\\Windows\\Fonts\\arialbd.ttf"
         
-    try:
-        # Use a large font size to match the 1024x1024 image
-        font = ImageFont.truetype(font_path, 110)
-    except Exception:
-        font = ImageFont.load_default()
-        
-    # Get text size to center it
-    try:
-        bbox = draw.textbbox((0, 0), text, font=font)
-        text_w = bbox[2] - bbox[0]
-        text_h = bbox[3] - bbox[1]
-    except AttributeError:
-        # Older pillow versions
-        text_w, text_h = draw.textsize(text, font=font)
+    # Dynamically find the best font size so the longer text fits
+    font_size = 130
+    font = ImageFont.load_default()
+    text_w = 0
+    text_h = 0
+    
+    while font_size > 20:
+        try:
+            font = ImageFont.truetype(font_path, font_size)
+        except Exception:
+            font = ImageFont.load_default()
+            break
+            
+        try:
+            bbox = draw.textbbox((0, 0), text, font=font)
+            text_w = bbox[2] - bbox[0]
+            text_h = bbox[3] - bbox[1]
+        except AttributeError:
+            text_w, text_h = draw.textsize(text, font=font)
+            
+        if text_w < width * 0.9:
+            break
+        font_size -= 5
         
     # Calculate position
     x = (width - text_w) / 2
