@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Car, Fuel, MapPin, Moon, ShieldCheck, Info, Phone, ChevronRight } from "lucide-react";
 
+// Reusable Inclusion Tag component
+const InclusionTag = ({ icon: IconComponent, text }) => (
+  <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 px-2.5 py-1 rounded-full text-[11px] font-medium text-gray-600">
+    <IconComponent size={12} className="text-indigo-500" />
+    {text}
+  </div>
+);
+
 export default function TaxiFare() {
   const [activeTab, setActiveTab] = useState("ROUND");
 
@@ -18,14 +26,6 @@ export default function TaxiFare() {
       acAvg: "10 km/L"
     }
   ];
-
-  // Reusable Inclusion Tag component
-  const InclusionTag = ({ icon: Icon, text }) => (
-    <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 px-2.5 py-1 rounded-full text-[11px] font-medium text-gray-600">
-      <Icon size={12} className="text-indigo-500" />
-      {text}
-    </div>
-  );
 
   return (
     <section className="py-12 bg-slate-50 min-h-screen font-sans">

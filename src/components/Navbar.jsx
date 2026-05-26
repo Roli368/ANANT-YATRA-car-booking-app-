@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Phone, MessageCircle, Menu, X, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const links = [
   { id: "services", label: "Services" },
@@ -42,7 +43,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center">
 
           {/* 🔹 LOGO SECTION */}
-          <div className="flex items-center gap-4 group cursor-pointer">
+          <Link to="/" className="flex items-center gap-4 group cursor-pointer">
             <div className="relative">
               <img
                 src="/logo.png"
@@ -56,22 +57,22 @@ export default function Navbar() {
                 YUVI <span className="text-indigo-600">YATRA TRAVELS</span>
               </p>
             </div>
-          </div>
+          </Link>
 
           {/* 🔹 DESKTOP NAV */}
           <nav className="hidden md:flex items-center gap-2">
             <ul className="flex items-center gap-1 bg-slate-100/50 p-1 rounded-full border border-slate-200/50 mr-4">
               {links.map((l) => (
                 <li key={l.id}>
-                  <a
-                    href={`#${l.id}`}
+                  <Link
+                    to={`/#${l.id}`}
                     className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${active === l.id
                         ? "bg-white text-indigo-600 shadow-sm"
                         : "text-slate-500 hover:text-slate-900"
                       }`}
                   >
                     {l.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -112,9 +113,9 @@ export default function Navbar() {
       >
         <div className="p-6 space-y-4">
           {links.map((l) => (
-            <a
+            <Link
               key={l.id}
-              href={`#${l.id}`}
+              to={`/#${l.id}`}
               onClick={() => setOpen(false)}
               className={`flex items-center justify-between p-4 rounded-2xl transition-all ${active === l.id
                   ? "bg-indigo-50 text-indigo-600 font-bold"
@@ -123,7 +124,7 @@ export default function Navbar() {
             >
               {l.label}
               <ChevronRight size={18} className={active === l.id ? "opacity-100" : "opacity-0"} />
-            </a>
+            </Link>
           ))}
 
           <div className="grid grid-cols-2 gap-4 pt-4">

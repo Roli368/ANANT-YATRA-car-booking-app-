@@ -1,39 +1,31 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.xml" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
+  <!-- Homepage -->
   <url>
     <loc>https://yuviyatratravels.com/</loc>
-    <lastmod>2026-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-
+  
+  <!-- SEO Section Pages -->
   <url>
-    <loc>https://yuviyatratravels.com/#about</loc>
-    <lastmod>2026-05-19</lastmod>
+    <loc>https://yuviyatratravels.com/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
   <url>
-    <loc>https://yuviyatratravels.com/#services</loc>
-    <lastmod>2026-05-19</lastmod>
+    <loc>https://yuviyatratravels.com/services</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
   <url>
-    <loc>https://yuviyatratravels.com/#booking</loc>
-    <lastmod>2026-05-19</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://yuviyatratravels.com/booking</loc>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://yuviyatratravels.com/#reviews</loc>
-    <lastmod>2026-05-19</lastmod>
+    <loc>https://yuviyatratravels.com/reviews</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-
 </urlset>

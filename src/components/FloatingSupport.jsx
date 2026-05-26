@@ -1,28 +1,28 @@
 import { MessageCircle, Send, Phone } from "lucide-react";
 
+const Button = ({ href, icon: IconComponent, label, colorClass, animation }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label={label}
+    className={`flex items-center justify-end gap-3 group transition-all duration-300 hover:scale-105 active:scale-95`}
+  >
+    {/* Hover Label */}
+    <span className="bg-white text-slate-900 text-xs font-bold px-4 py-2 rounded-xl shadow-xl border border-slate-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      {label}
+    </span>
+    
+    {/* Icon Circle */}
+    <div className={`p-4 rounded-[1.25rem] shadow-2xl text-white ${colorClass} ${animation} flex items-center justify-center`}>
+      <IconComponent size={24} className="group-hover:rotate-12 transition-transform" />
+    </div>
+  </a>
+);
+
 export default function FloatingSupport() {
   const chatMsg = "Hi Yuvi Yatra Travels 👋 I need help regarding booking.";
   const whatsappMsg = "Hi Yuvi Yatra Travels 🚗 I want to book a car.";
-
-  const Button = ({ href, icon: Icon, label, colorClass, animation }) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={label}
-      className={`flex items-center justify-end gap-3 group transition-all duration-300 hover:scale-105 active:scale-95`}
-    >
-      {/* Hover Label */}
-      <span className="bg-white text-slate-900 text-xs font-bold px-4 py-2 rounded-xl shadow-xl border border-slate-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        {label}
-      </span>
-      
-      {/* Icon Circle */}
-      <div className={`p-4 rounded-[1.25rem] shadow-2xl text-white ${colorClass} ${animation} flex items-center justify-center`}>
-        <Icon size={24} className="group-hover:rotate-12 transition-transform" />
-      </div>
-    </a>
-  );
 
   return (
     <div className="fixed bottom-8 right-8 z-[9999] flex flex-col items-end gap-4">

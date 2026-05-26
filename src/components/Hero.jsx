@@ -16,13 +16,6 @@ export default function Hero() {
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      handleNext();
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
-
   const handleNext = () => {
     setFade(false);
     setTimeout(() => {
@@ -38,6 +31,13 @@ export default function Hero() {
       setFade(true);
     }, 200);
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNext();
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section className="relative overflow-hidden bg-slate-900 pt-32 pb-20 lg:pt-48 lg:pb-32">

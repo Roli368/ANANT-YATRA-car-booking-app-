@@ -8,15 +8,17 @@ const DEFAULT_REVIEWS = [
 ];
 
 export default function Reviews() {
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem("reviews"));
+      return stored?.length ? stored : DEFAULT_REVIEWS;
+    } catch {
+      return DEFAULT_REVIEWS;
+    }
+  });
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const [form, setForm] = useState({ name: "", place: "", rating: 5, text: "" });
-
-  useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("reviews"));
-    setReviews(stored?.length ? stored : DEFAULT_REVIEWS);
-  }, []);
 
   useEffect(() => {
     if (!reviews.length) return;
